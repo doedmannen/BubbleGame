@@ -30,9 +30,3 @@ I love the coding train.
 -- Issues:
 
 No known issues at the moment.
-
-
--- Suggestions:
-
-1. Make red bubbles move toward the players location, if close... like zombies?
-2. Up the spazm by increaing move() on every 5th level and resetting bubbles.
