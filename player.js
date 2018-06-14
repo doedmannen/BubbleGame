@@ -12,6 +12,8 @@ class player{
     strokeWeight(2);
     fill(0, 0, 255);
     ellipse(this.x, this.y, this.r*2);
+    fill(255)
+    ellipse(this.x, this.y, this.r/2)
   }
 
   move(){
