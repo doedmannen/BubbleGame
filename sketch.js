@@ -1,14 +1,24 @@
+let ourHero;               // The player object
+
 let bubbles = [];          // Array for bubble objects
 let redBubbles = 0;        // Startvalue for game
 let greenBubbles = 0;      // Startvalue for game
-let yellowBubbles = 0;      // Startvalue for game
+let yellowBubbles = 0;     // Startvalue for game
+let moveSpeed = 0;         // Speed of bubbles
 
-let ourHero;               // The player object
 let pickUps = 0;           // How many pickUps we need to level up
 let level = 0;             // The current level (0 if no game is active)
+let score = 0;             // The current score
+let highscore = 0;         // The highscore is displayed on gameover
+
+// This object is used to obain a new travel location
+// See position.js
+let checkPos = new positionTracker();
+let setBubble = [];        // Array for getting bubble location
+
 
 /*
-The timer is used for 3 things
+The timer is used for 2 things
   1. To keep the board clean at levelchanges and displaying "level up"-text
   2. To calculate how long a yellow bubble should be active on the gameboard
 
@@ -19,13 +29,15 @@ let counter = countTimer;  // counts time at levelchanges
 let wall = 10;             // Size of wall around gameboard
 let game = false;          // Is the game active?
 let pause = false;         // Pauses the game
-let spawn;
 
 
 function setup(){
   createCanvas(800, 600);
 
   frameRate(100);           // Probably not going to do 100fps
+
+  pixelDensity(1);          // Trying to get better quality
+  displayDensity(1);        // Trying to get better quality
 
   noCursor();               // Hide the mouse inside canvas
 
@@ -38,7 +50,7 @@ function setup(){
 If the button "P" is pressed, the game is paused.
 This is a terrible feature because if we move the mouse while
 the game is paused and then unpause the game, we will probably hit
-something red. I'm not sure about this.
+something. I'm not sure about this.
 */
 function keyPressed() {
   if (keyCode === 80) {
@@ -60,10 +72,12 @@ function mouseClicked() {
   if (!game){
     game = true;               // Set the game to active
     level = 1;                 // We start at level 1
+    moveSpeed = 0.5;            // Reset speed
     redBubbles = 0;            // Reset value if game over
     greenBubbles = 0;          // Reset value if game over
     pickUps = greenBubbles;    // Reset value if game over
     counter = 0;               // Reset counter
+    score = 0;
     ourHero.r = 10;            // Reset playersize if game over
     loop();                    // Start the loop
   }
@@ -107,14 +121,15 @@ function draw(){
   If so, we allow the player to use a yellow bubble to
   shrink in size.
   */
-  if(pickUps < 1 && level > 0 && counter >= 50){
-    redBubbles += 5;
+  if(pickUps < 1 && level > 0 && counter >= 100){
+    redBubbles += 4;
     greenBubbles += 1;
     yellowBubbles = 0;
     pickUps = greenBubbles;
 
+
     // How often to spawn yellowBubbles
-    if((level < 15 && level % 5 == 0) || level > 15){
+    if(level % 5 == 0){
       yellowBubbles = 1;
     }
 
@@ -125,8 +140,9 @@ function draw(){
     are not to close to the players position.
     */
     delete bubbles;
+    checkPos.clear();
 
-    for(let i = 0; i < redBubbles+greenBubbles+yellowBubbles; i++){
+    for(let i = 0; i < redBubbles + greenBubbles + yellowBubbles; i++){
       if(i < yellowBubbles){
         bubbles[i] = new bubble("YELLOW");
       } else if(i < greenBubbles+yellowBubbles){
@@ -158,7 +174,7 @@ function draw(){
   if(!game){
     strokeWeight(1);
     stroke("#000")
-    fill(255, 255, 0, 150);
+    fill(255, 255, 0);
     textStyle(NORMAL);
     textSize(20);
     text("CLICK THE MOUSE TO BEGIN A NEW GAME", 185, height/2+100);
@@ -175,6 +191,11 @@ function draw(){
     } else {
       textStyle(BOLD);
       text(".: GAME  OVER :.", 200, height/2);
+      textStyle(NORMAL);
+      textSize(20);
+      text("Your score: "+score, 240, height/2+50);
+      text("Highscore: "+highscore, 425, height/2+50);
+
     }
 
     noLoop();
@@ -183,13 +204,13 @@ function draw(){
   /*
   Display level up before next level
   */
-  if(counter < 50 && level > 1 && pickUps < 1 && game){
+  if(counter < 100 && level > 1 && pickUps < 1 && game){
     strokeWeight(1);
-    stroke("#000")
+    stroke(0)
     textSize(48);
-    fill(255, 255, 0, 150);
+    fill(255, 255, 0);
     textStyle(BOLD);
-    text("LEVEL "+level, 280, height/2);
+    text("LEVEL " + level, 290, height/2);
   }
 
 
@@ -198,11 +219,11 @@ function draw(){
   which level we are on.
   */
 
-  fill(255, 255, 0, 150);
+  fill(255, 255, 0);
   noStroke();
   textStyle(BOLD);
   textSize(16);
-  text("Green bubbles left: " + pickUps, 25, 36);
-  text("Level: " + level, 700, 36);
-
+  text("Green bubbles left: " + pickUps, 300, 36);
+  text("Score: " + score, 50, 36);
+  text("Highscore: " + highscore, 630, 36);
 }
