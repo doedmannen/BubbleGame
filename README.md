@@ -9,7 +9,7 @@ This is my first project in JavaScript and my first time trying out GitHub.
 
 Recognition:
 This game is influenced on the bubble lessons on Daniel Shiffmans
-youtube channel The Coding Train. I've based the game on code that he 
+youtube channel The Coding Train. I've based the game on code that he
 wrote and added functions to make it into a game.
 
 Check out his videos on youtube:
@@ -24,10 +24,15 @@ I love the coding train.
 
 
 -- Needed to be done:
-
-Nothing at the moment.
+1. Smoothing of the game
 
 
 -- Issues:
 
 No known issues at the moment.
+
+
+-- Suggestions:
+
+1. Make red bubbles move toward the players location, if close... like zombies?
+2. Up the spazm by increaing move() on every 5th level and resetting bubbles.
